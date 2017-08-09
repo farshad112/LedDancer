@@ -1,0 +1,71 @@
+000     @SCRATCH
+001     @SCRATCH
+001     _RETURN_
+002     @SCRATCH
+003     @SCRATCH
+005     main.@SCRATCH1
+006     port_b_led_animation.mode
+007     port_b_led_animation.i
+008     port_b_led_animation.led_val
+009     port_b_led_animation.@SCRATCH1
+00A     @delay_ms1.P1
+F83     PSP_DATA
+FBB     CCP_2_LOW
+FBB     CCP_2
+FBC     CCP_2_HIGH
+FBE     CCP_1
+FBE     CCP_1_LOW
+FBF     CCP_1_HIGH
+FE1-FE2 @READ_PACKED_MEMORY.P1
+FE1-FE2 @WRITE_PACKED_MEMORY.P2
+FE9-FEA @WRITE_PROGRAM_MEMORY.P1
+FE9-FEA @WRITE_PACKED_MEMORY.P2
+FE9-FEA @READ_PACKED_MEMORY.P3
+FE9-FEA @READ_PROGRAM_MEMORY.P4
+FF6-FF8 @READ_PROGRAM_MEMORY.P1
+FF6-FF8 @WRITE_PROGRAM_MEMORY.P2
+
+ROM Allocation:
+000004  get_port_c_input_val
+00000E  @delay_ms1
+000034  port_b_led_animation
+000290  main
+000290  @cinit1
+00029C  @cinit2
+
+Project Directory:
+    C:\Users\Farshad\Documents\MicrocontrollerProjects\LedDancer\Code\
+
+Project Files:
+    LedDancer.c                                             [09-??.-17 23.59  CRC=ABCE433C]
+    LedDancer.h                                             [09-??.-17 00.32  CRC=00000000]
+    ..\..\..\..\..\..\Program Files (x86)\PICC\Devices\18F452.h [08-??????.-15 15.15  CRC=FF951615]
+
+Source signature=AAF86F66
+Program memory checksum=0000
+Program memory CRC=0000
+Hex file CRC=7F1E
+
+Units:
+    LedDancer (main)
+
+Compiler Settings:
+    Processor:      PIC18F452
+    Pointer Size:   16
+    ADC Range:      0-1023
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+    Compile Mode:       CCS5
+
+Output Files:
+    XREF file:   LedDancer.xsym
+    Errors:      LedDancer.err
+    Ext Symbols: LedDancer.esym
+    INHX32:      LedDancer.hex
+    Symbols:     LedDancer.sym
+    List:        LedDancer.lst
+    Debug/COFF:  LedDancer.cof
+    Project:     LedDancer.ccspjt
+    Call Tree:   LedDancer.tre
+    Statistics:  LedDancer.STA

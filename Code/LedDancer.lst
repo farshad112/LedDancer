@@ -1,0 +1,519 @@
+CCS PCH C Compiler, Version 5.049, 5967               09-??.-17 23.59
+
+               Filename:   C:\Users\Farshad\Documents\MicrocontrollerProjects\LedDancer\Code\LedDancer.lst
+
+               ROM used:   692 bytes (2%)
+                           Largest free fragment is 32076
+               RAM used:   5 (0%) at main() level
+                           10 (1%) worst case
+               Stack used: 1 locations
+               Stack size: 31
+
+*
+0000:  GOTO   0290
+.................... #include <LedDancer.h> 
+.................... #include <18F452.h> 
+.................... //////////// Standard Header file for the PIC18F452 device //////////////// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2014 Custom Computer Services          //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... #device PIC18F452 
+....................  
+.................... #list 
+....................  
+.................... #device ADC=10 
+.................... #use delay(crystal=8MHz) 
+*
+000E:  CLRF   FEA
+0010:  MOVLW  0A
+0012:  MOVWF  FE9
+0014:  MOVF   FEF,W
+0016:  BZ    0032
+0018:  MOVLW  02
+001A:  MOVWF  01
+001C:  CLRF   00
+001E:  DECFSZ 00,F
+0020:  BRA    001E
+0022:  DECFSZ 01,F
+0024:  BRA    001C
+0026:  MOVLW  97
+0028:  MOVWF  00
+002A:  DECFSZ 00,F
+002C:  BRA    002A
+002E:  DECFSZ FEF,F
+0030:  BRA    0018
+0032:  RETURN 0
+....................  
+....................  
+....................  
+.................... // PORT defines 
+.................... //#define ENABLE_AUTO_LED_ANIMATION   // comment this line to turn offf automatic mode switching 
+.................... #define MAX_NUM_OF_MODE             9 
+.................... #define ANIMATION_SPEED_IN_MS       700 
+....................  
+.................... #define PORTB_OUTPUT                0x00 
+.................... #define PORTC_INPUT                 0xFF 
+....................  
+.................... // LED ANIMATION Mode Defines 
+.................... #define RESET_ALL_LED               0x0 
+.................... #define BLINK_ALL_LED_AT_A_TIME     0x1 
+.................... #define MOVE_TWO_LED_LEFT_TO_RIGHT  0x2 
+.................... #define MOVE_ONE_LED_LEFT_TO_RIGHT  0x3 
+.................... #define MOVE_TWO_LED_RIGHT_TO_LEFT  0x4 
+.................... #define MOVE_ONE_LED_RIGHT_TO_LEFT  0x5 
+.................... #define BLINK_ONLY_EVEN_LED         0x6 
+.................... #define BLINK_ONLY_ODD_LED          0x7 
+.................... #define TOGGLE_EVEN_AND_ODD_LED     0x8 
+....................  
+.................... // Function Prototypes 
+.................... void port_b_led_animation(char mode);  
+.................... char get_port_c_input_val(); 
+....................  
+.................... void main() 
+*
+0290:  CLRF   FF8
+0292:  BCF    FD0.7
+0294:  BSF    FC1.0
+0296:  BSF    FC1.1
+0298:  BSF    FC1.2
+029A:  BCF    FC1.3
+.................... { 
+....................    // local variable 
+....................    #IFDEF ENABLE_AUTO_LED_ANIMATION 
+....................       char mode_num = 0; 
+....................    #ENDIF    
+....................     
+....................    SET_TRIS_B(PORTB_OUTPUT);  // Declare PORT B as output 
+029C:  MOVLW  00
+029E:  MOVWF  F93
+....................    SET_TRIS_C(PORTC_INPUT);  // Declare PORT C as input 
+02A0:  MOVLW  FF
+02A2:  MOVWF  F94
+....................     
+....................    while(TRUE) 
+....................    { 
+....................       #IFDEF ENABLE_AUTO_LED_ANIMATION 
+....................          for (mode_num=0; mode_num < MAX_NUM_OF_MODE; mode_num++) { 
+....................             port_b_led_animation(mode_num); 
+....................          } 
+....................       #ELSE 
+....................          port_b_led_animation(get_port_c_input_val()); 
+02A4:  BRA    0004
+02A6:  MOVFF  01,05
+02AA:  MOVFF  01,06
+02AE:  BRA    0034
+....................       #ENDIF    
+02B0:  BRA    02A4
+....................    } 
+....................  
+.................... } 
+....................  
+02B2:  SLEEP 
+.................... void port_b_led_animation(char mode) 
+.................... { 
+....................    // local variables 
+....................    char i; 
+....................    char led_val; 
+....................     
+....................    if (mode == RESET_ALL_LED){ 
+*
+0034:  MOVF   06,F
+0036:  BNZ   004C
+....................       output_b(0x00); 
+0038:  CLRF   F93
+003A:  CLRF   F8A
+....................       delay_ms(ANIMATION_SPEED_IN_MS); 
+003C:  MOVLW  04
+003E:  MOVWF  09
+0040:  MOVLW  AF
+0042:  MOVWF  0A
+0044:  RCALL  000E
+0046:  DECFSZ 09,F
+0048:  BRA    0040
+....................    } 
+004A:  BRA    028C
+....................    else if(mode == BLINK_ALL_LED_AT_A_TIME){ 
+004C:  DECFSZ 06,W
+004E:  BRA    0064
+....................       output_b(0xFF); 
+0050:  CLRF   F93
+0052:  SETF   F8A
+....................       delay_ms(ANIMATION_SPEED_IN_MS); 
+0054:  MOVLW  04
+0056:  MOVWF  09
+0058:  MOVLW  AF
+005A:  MOVWF  0A
+005C:  RCALL  000E
+005E:  DECFSZ 09,F
+0060:  BRA    0058
+....................    } 
+0062:  BRA    028C
+....................    else if(mode == MOVE_TWO_LED_LEFT_TO_RIGHT) { 
+0064:  MOVF   06,W
+0066:  SUBLW  02
+0068:  BNZ   009A
+....................       led_val = 0xC0;    // 8'b1100_0000 
+006A:  MOVLW  C0
+006C:  MOVWF  08
+....................       for(i=0; i<8;i=i+2) { 
+006E:  CLRF   07
+0070:  MOVF   07,W
+0072:  SUBLW  07
+0074:  BNC   0098
+....................          output_b(led_val); 
+0076:  CLRF   F93
+0078:  MOVFF  08,F8A
+....................          delay_ms(ANIMATION_SPEED_IN_MS); 
+007C:  MOVLW  04
+007E:  MOVWF  09
+0080:  MOVLW  AF
+0082:  MOVWF  0A
+0084:  RCALL  000E
+0086:  DECFSZ 09,F
+0088:  BRA    0080
+....................          led_val /= 4; 
+008A:  RRCF   08,F
+008C:  RRCF   08,F
+008E:  MOVLW  3F
+0090:  ANDWF  08,F
+0092:  MOVLW  02
+0094:  ADDWF  07,F
+0096:  BRA    0070
+....................       } 
+....................    } 
+0098:  BRA    028C
+....................    else if(mode == MOVE_ONE_LED_LEFT_TO_RIGHT) { 
+009A:  MOVF   06,W
+009C:  SUBLW  03
+009E:  BNZ   00CC
+....................       led_val = 0x80;    // 8'b1000_0000 
+00A0:  MOVLW  80
+00A2:  MOVWF  08
+....................       for(i=0; i<8;i=i+1) { 
+00A4:  CLRF   07
+00A6:  MOVF   07,W
+00A8:  SUBLW  07
+00AA:  BNC   00CA
+....................          output_b(led_val); 
+00AC:  CLRF   F93
+00AE:  MOVFF  08,F8A
+....................          delay_ms(ANIMATION_SPEED_IN_MS); 
+00B2:  MOVLW  04
+00B4:  MOVWF  09
+00B6:  MOVLW  AF
+00B8:  MOVWF  0A
+00BA:  RCALL  000E
+00BC:  DECFSZ 09,F
+00BE:  BRA    00B6
+....................          led_val /= 2; 
+00C0:  BCF    FD8.0
+00C2:  RRCF   08,F
+00C4:  MOVLW  01
+00C6:  ADDWF  07,F
+00C8:  BRA    00A6
+....................       } 
+....................    } 
+00CA:  BRA    028C
+....................    else if(mode == MOVE_TWO_LED_RIGHT_TO_LEFT){ 
+00CC:  MOVF   06,W
+00CE:  SUBLW  04
+00D0:  BNZ   0102
+....................       led_val = 0x03;    // 8'b0000_0011 
+00D2:  MOVLW  03
+00D4:  MOVWF  08
+....................       for(i=0; i<8;i=i+2) { 
+00D6:  CLRF   07
+00D8:  MOVF   07,W
+00DA:  SUBLW  07
+00DC:  BNC   0100
+....................          output_b(led_val); 
+00DE:  CLRF   F93
+00E0:  MOVFF  08,F8A
+....................          delay_ms(ANIMATION_SPEED_IN_MS); 
+00E4:  MOVLW  04
+00E6:  MOVWF  09
+00E8:  MOVLW  AF
+00EA:  MOVWF  0A
+00EC:  RCALL  000E
+00EE:  DECFSZ 09,F
+00F0:  BRA    00E8
+....................          led_val *= 4; 
+00F2:  MOVF   08,W
+00F4:  MULLW  04
+00F6:  MOVFF  FF3,08
+00FA:  MOVLW  02
+00FC:  ADDWF  07,F
+00FE:  BRA    00D8
+....................       } 
+....................    } 
+0100:  BRA    028C
+....................    else if(mode == MOVE_ONE_LED_RIGHT_TO_LEFT){ 
+0102:  MOVF   06,W
+0104:  SUBLW  05
+0106:  BNZ   0134
+....................       led_val = 0x01;    // 8'b0000_0001 
+0108:  MOVLW  01
+010A:  MOVWF  08
+....................       for(i=0; i<8;i=i+1) { 
+010C:  CLRF   07
+010E:  MOVF   07,W
+0110:  SUBLW  07
+0112:  BNC   0132
+....................          output_b(led_val); 
+0114:  CLRF   F93
+0116:  MOVFF  08,F8A
+....................          delay_ms(ANIMATION_SPEED_IN_MS); 
+011A:  MOVLW  04
+011C:  MOVWF  09
+011E:  MOVLW  AF
+0120:  MOVWF  0A
+0122:  RCALL  000E
+0124:  DECFSZ 09,F
+0126:  BRA    011E
+....................          led_val *= 2; 
+0128:  BCF    FD8.0
+012A:  RLCF   08,F
+012C:  MOVLW  01
+012E:  ADDWF  07,F
+0130:  BRA    010E
+....................       } 
+....................    } 
+0132:  BRA    028C
+....................    else if(mode == BLINK_ONLY_EVEN_LED) { 
+0134:  MOVF   06,W
+0136:  SUBLW  06
+0138:  BNZ   0154
+....................       led_val = 0xAA;      // 8'b1010_1010 
+013A:  MOVLW  AA
+013C:  MOVWF  08
+....................       output_b(led_val); 
+013E:  CLRF   F93
+0140:  MOVFF  08,F8A
+....................       delay_ms(ANIMATION_SPEED_IN_MS); 
+0144:  MOVLW  04
+0146:  MOVWF  09
+0148:  MOVLW  AF
+014A:  MOVWF  0A
+014C:  RCALL  000E
+014E:  DECFSZ 09,F
+0150:  BRA    0148
+....................    } 
+0152:  BRA    028C
+....................    else if(mode == BLINK_ONLY_ODD_LED) { 
+0154:  MOVF   06,W
+0156:  SUBLW  07
+0158:  BNZ   0174
+....................       led_val = 0x55;      // 8'b0101_0101 
+015A:  MOVLW  55
+015C:  MOVWF  08
+....................       output_b(led_val); 
+015E:  CLRF   F93
+0160:  MOVFF  08,F8A
+....................       delay_ms(ANIMATION_SPEED_IN_MS); 
+0164:  MOVLW  04
+0166:  MOVWF  09
+0168:  MOVLW  AF
+016A:  MOVWF  0A
+016C:  RCALL  000E
+016E:  DECFSZ 09,F
+0170:  BRA    0168
+....................    } 
+0172:  BRA    028C
+....................    else if(mode == TOGGLE_EVEN_AND_ODD_LED) { 
+0174:  MOVF   06,W
+0176:  SUBLW  08
+0178:  BNZ   01AC
+....................       led_val = 0xAA;      // 8'b1010_1010 
+017A:  MOVLW  AA
+017C:  MOVWF  08
+....................       output_b(led_val); 
+017E:  CLRF   F93
+0180:  MOVFF  08,F8A
+....................       delay_ms(ANIMATION_SPEED_IN_MS); 
+0184:  MOVLW  04
+0186:  MOVWF  09
+0188:  MOVLW  AF
+018A:  MOVWF  0A
+018C:  RCALL  000E
+018E:  DECFSZ 09,F
+0190:  BRA    0188
+....................       led_val = 0x55;      // 8'b0101_0101 
+0192:  MOVLW  55
+0194:  MOVWF  08
+....................       output_b(led_val); 
+0196:  CLRF   F93
+0198:  MOVFF  08,F8A
+....................       delay_ms(ANIMATION_SPEED_IN_MS); 
+019C:  MOVLW  04
+019E:  MOVWF  09
+01A0:  MOVLW  AF
+01A2:  MOVWF  0A
+01A4:  RCALL  000E
+01A6:  DECFSZ 09,F
+01A8:  BRA    01A0
+....................    } 
+01AA:  BRA    028C
+....................    else { 
+....................       for(i=0;i<8;i++) { 
+01AC:  CLRF   07
+01AE:  MOVF   07,W
+01B0:  SUBLW  07
+01B2:  BNC   01DC
+....................          output_b(0x00); 
+01B4:  CLRF   F93
+01B6:  CLRF   F8A
+....................          delay_ms(ANIMATION_SPEED_IN_MS); 
+01B8:  MOVLW  04
+01BA:  MOVWF  09
+01BC:  MOVLW  AF
+01BE:  MOVWF  0A
+01C0:  RCALL  000E
+01C2:  DECFSZ 09,F
+01C4:  BRA    01BC
+....................          output_b(0xFF); 
+01C6:  CLRF   F93
+01C8:  SETF   F8A
+....................          delay_ms(ANIMATION_SPEED_IN_MS); 
+01CA:  MOVLW  04
+01CC:  MOVWF  09
+01CE:  MOVLW  AF
+01D0:  MOVWF  0A
+01D2:  RCALL  000E
+01D4:  DECFSZ 09,F
+01D6:  BRA    01CE
+01D8:  INCF   07,F
+01DA:  BRA    01AE
+....................       }    
+....................       led_val = 0xC0;    // 8'b1100_0000 
+01DC:  MOVLW  C0
+01DE:  MOVWF  08
+....................       for(i=0; i<8;i=i+2) { 
+01E0:  CLRF   07
+01E2:  MOVF   07,W
+01E4:  SUBLW  07
+01E6:  BNC   020A
+....................          output_b(led_val); 
+01E8:  CLRF   F93
+01EA:  MOVFF  08,F8A
+....................          delay_ms(ANIMATION_SPEED_IN_MS); 
+01EE:  MOVLW  04
+01F0:  MOVWF  09
+01F2:  MOVLW  AF
+01F4:  MOVWF  0A
+01F6:  RCALL  000E
+01F8:  DECFSZ 09,F
+01FA:  BRA    01F2
+....................          led_val /= 4; 
+01FC:  RRCF   08,F
+01FE:  RRCF   08,F
+0200:  MOVLW  3F
+0202:  ANDWF  08,F
+0204:  MOVLW  02
+0206:  ADDWF  07,F
+0208:  BRA    01E2
+....................       } 
+....................       led_val = 0x80;    // 8'b1000_0000 
+020A:  MOVLW  80
+020C:  MOVWF  08
+....................       for(i=0; i<8;i=i+1) { 
+020E:  CLRF   07
+0210:  MOVF   07,W
+0212:  SUBLW  07
+0214:  BNC   0234
+....................          output_b(led_val); 
+0216:  CLRF   F93
+0218:  MOVFF  08,F8A
+....................          delay_ms(ANIMATION_SPEED_IN_MS); 
+021C:  MOVLW  04
+021E:  MOVWF  09
+0220:  MOVLW  AF
+0222:  MOVWF  0A
+0224:  RCALL  000E
+0226:  DECFSZ 09,F
+0228:  BRA    0220
+....................          led_val /= 2; 
+022A:  BCF    FD8.0
+022C:  RRCF   08,F
+022E:  MOVLW  01
+0230:  ADDWF  07,F
+0232:  BRA    0210
+....................       } 
+....................       led_val = 0x03;    // 8'b0000_0011 
+0234:  MOVLW  03
+0236:  MOVWF  08
+....................       for(i=0; i<8;i=i+2) { 
+0238:  CLRF   07
+023A:  MOVF   07,W
+023C:  SUBLW  07
+023E:  BNC   0262
+....................          output_b(led_val); 
+0240:  CLRF   F93
+0242:  MOVFF  08,F8A
+....................          delay_ms(ANIMATION_SPEED_IN_MS); 
+0246:  MOVLW  04
+0248:  MOVWF  09
+024A:  MOVLW  AF
+024C:  MOVWF  0A
+024E:  RCALL  000E
+0250:  DECFSZ 09,F
+0252:  BRA    024A
+....................          led_val *= 4; 
+0254:  MOVF   08,W
+0256:  MULLW  04
+0258:  MOVFF  FF3,08
+025C:  MOVLW  02
+025E:  ADDWF  07,F
+0260:  BRA    023A
+....................       } 
+....................       led_val = 0x01;    // 8'b0000_0001 
+0262:  MOVLW  01
+0264:  MOVWF  08
+....................       for(i=0; i<8;i=i+1) { 
+0266:  CLRF   07
+0268:  MOVF   07,W
+026A:  SUBLW  07
+026C:  BNC   028C
+....................          output_b(led_val); 
+026E:  CLRF   F93
+0270:  MOVFF  08,F8A
+....................          delay_ms(ANIMATION_SPEED_IN_MS); 
+0274:  MOVLW  04
+0276:  MOVWF  09
+0278:  MOVLW  AF
+027A:  MOVWF  0A
+027C:  RCALL  000E
+027E:  DECFSZ 09,F
+0280:  BRA    0278
+....................          led_val *= 2; 
+0282:  BCF    FD8.0
+0284:  RLCF   08,F
+0286:  MOVLW  01
+0288:  ADDWF  07,F
+028A:  BRA    0268
+....................       } 
+....................    } 
+028C:  GOTO   02B0 (RETURN)
+.................... } 
+....................  
+.................... char get_port_c_input_val(){ 
+....................    return input_c();    
+*
+0004:  SETF   F94
+0006:  MOVFF  F82,01
+000A:  GOTO   02A6 (RETURN)
+.................... } 
+
+Configuration Fuses:
+   Word  1: 2200   HS NOOSCSEN
+   Word  2: 0E0E   PUT BROWNOUT BORV20 NOWDT WDT128
+   Word  3: 0100   CCP2C1
+   Word  4: 0081   STVREN NOLVP NODEBUG
+   Word  5: C00F   NOPROTECT NOCPB NOCPD
+   Word  6: E00F   NOWRT NOWRTC NOWRTB NOWRTD
+   Word  7: 400F   NOEBTR NOEBTRB

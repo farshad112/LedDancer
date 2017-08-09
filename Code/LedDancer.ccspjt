@@ -1,0 +1,56 @@
+[PROJECT]
+Target=LedDancer.hex
+Processor_Text=PIC18F452
+CCSVerions=5.049
+Compiler=PCH
+CCSVersion=5.049
+[Target Data]
+FileList=LedDancer.c
+[Directories]
+Include=
+[C:\Users\Farshad\Documents\MicrocontrollerProjects\LedDancer\Code\LedDancer]
+Type=4
+[mru-list]
+1=LedDancer.c
+
+[ProjectLog]
+Days=2
+D1=09-08-2017
+D1_L=12
+D1_L1=[1945]Project Opened.
+D1_L2=[1949]Started Editing.
+D1_L3=[2580]Stopped Editing.
+D1_L4=[2834]Started Editing.
+D1_L5=[3272]Stopped Editing.
+TotalEdit=92
+TotalDebug=0
+D1_E=8
+D1_D=0
+D1_L6=[3673]Project Closed.
+D1_L7=[80292]Project Opened.
+D1_L8=[80306]Started Editing.
+D1_L9=[84935]Stopped Editing.
+D1_L10=[84944]Started Editing.
+D1_L11=[85587]Stopped Editing.
+D1_L12=[86266]Started Editing.
+D2=10-08-2017
+D2_L=4
+D2_L1=[205]Stopped Editing.
+D2_E=84
+D2_D=0
+D2_L2=[206]Project Closed.
+D2_L3=[502]Project Opened.
+D2_L4=[1074]Project Closed.
+
+[Opened Files]
+1=LedDancer.c
+t1=25
+Count=1
+[LedDancer.c]
+Type=4
+
+[defines]
+buildcount=11
+[Units]
+Count=1
+1=LedDancer (main)

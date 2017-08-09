@@ -1,0 +1,48 @@
+
+ROM used:   692/32768 (2%)
+            692/32768 (2%) including unused fragments
+
+            0.8 Average locations per line
+            7.3 Average locations per statement
+
+RAM used:   5/1536 (0%) at main() level
+            10/1536 (1%) worst case
+
+Stack used: 1 worst case (1 in main + 0 for interrupts)
+Stack size: 31
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+  150    95 100  LedDancer.c
+    5     0   0  LedDancer.h
+  720     0   0  ..\..\..\..\..\..\Program Files (x86)\PICC\Devices\18F452.h
+----- -----
+  875    95 Total
+
+Page ROM  %  RAM    Vol Diff  Functions:
+---- --- --- ---    --- ----  ----------
+0     38   3    1             @delay_ms1
+0     36   3    1     70  1.6  main
+0    604  44    4   3239  6.5  port_b_led_animation
+0     10   1    0     16  1.0  get_port_c_input_val
+ Inline         0             @cinit1
+
+Program metrics:
+    Functions               3
+    Statements              95
+    Comments                149
+    Volume (V)              3495
+    Difficulty (D)          10.2
+    Effort to implement (E) 35787
+    Time to implement (T)   33 minutes
+    Est Delivered Bugs (B)  0
+    Cyclomatic Complexity   18
+    Maintainability (MI)    27
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00002     4  0  
+00004-07FFE   688  32076  
+
+
+
